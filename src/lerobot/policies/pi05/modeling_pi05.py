@@ -537,10 +537,10 @@ class PI05Pytorch(nn.Module):  # see openpi `PI0Pytorch`
             from transformers.models.siglip import check
 
             if not check.check_whether_transformers_replace_is_installed_correctly():
-                print(transformers.__version__)
+                logging.error("Transformers version: %s", transformers.__version__)
                 raise ValueError(msg)
         except ImportError as e:
-            print(e)
+            logging.error("Error importing transformers: %s", e)
             raise ValueError(msg) from None
 
     def gradient_checkpointing_enable(self):
