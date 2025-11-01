@@ -230,19 +230,13 @@ class PolicyServer(services_pb2_grpc.AsyncInferenceServicer):
             with self._predicted_timesteps_lock:
                 self._predicted_timesteps.add(obs.get_timestep())
 
-            self.logger.info(f"Reached here 1")
-
             start_time = time.perf_counter()
             action_chunk = self._predict_action_chunk(obs)
             inference_time = time.perf_counter() - start_time
 
-            self.logger.info(f"Reached here 2")
-
             start_time = time.perf_counter()
             actions_bytes = pickle.dumps(action_chunk)  # nosec
             serialize_time = time.perf_counter() - start_time
-
-            self.logger.info(f"Reached here 3")
 
             # Create and return the action chunk
             actions = services_pb2.Actions(data=actions_bytes)
@@ -348,9 +342,6 @@ class PolicyServer(services_pb2_grpc.AsyncInferenceServicer):
         """
         """1. Prepare observation"""
         start_prepare = time.perf_counter()
-        self.logger.info(f"Reached here 4")
-        self.logger.info(f"self.lerobot_features: {self.lerobot_features}")
-        self.logger.info(f"self.policy_image_features: {self.policy_image_features}")
         observation: Observation = raw_observation_to_observation(
             observation_t.get_observation(),
             self.lerobot_features,
