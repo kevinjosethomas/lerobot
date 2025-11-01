@@ -348,6 +348,9 @@ class PolicyServer(services_pb2_grpc.AsyncInferenceServicer):
         """
         """1. Prepare observation"""
         start_prepare = time.perf_counter()
+        self.logger.info(f"Reached here 4")
+        self.logger.info(f"self.lerobot_features: {self.lerobot_features}")
+        self.logger.info(f"self.policy_image_features: {self.policy_image_features}")
         observation: Observation = raw_observation_to_observation(
             observation_t.get_observation(),
             self.lerobot_features,
