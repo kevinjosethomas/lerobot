@@ -539,8 +539,7 @@ class PI05Pytorch(nn.Module):  # see openpi `PI0Pytorch`
             if not check.check_whether_transformers_replace_is_installed_correctly():
                 raise ValueError(msg + transformers.__version__)
         except ImportError as e:
-
-            raise ValueError(msg + transformers.__version__) from None
+            raise ValueError(msg + transformers.__version__ + str(e)) from None
 
     def gradient_checkpointing_enable(self):
         """Enable gradient checkpointing for memory optimization."""
