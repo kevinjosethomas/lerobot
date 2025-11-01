@@ -230,13 +230,19 @@ class PolicyServer(services_pb2_grpc.AsyncInferenceServicer):
             with self._predicted_timesteps_lock:
                 self._predicted_timesteps.add(obs.get_timestep())
 
+            self.logger.info(f"Reached here 1")
+
             start_time = time.perf_counter()
             action_chunk = self._predict_action_chunk(obs)
             inference_time = time.perf_counter() - start_time
 
+            self.logger.info(f"Reached here 2")
+
             start_time = time.perf_counter()
             actions_bytes = pickle.dumps(action_chunk)  # nosec
             serialize_time = time.perf_counter() - start_time
+
+            self.logger.info(f"Reached here 3")
 
             # Create and return the action chunk
             actions = services_pb2.Actions(data=actions_bytes)
@@ -263,6 +269,7 @@ class PolicyServer(services_pb2_grpc.AsyncInferenceServicer):
             return services_pb2.Empty()
 
         except Exception as e:
+            self.logger.error(e)
             self.logger.error(f"Error in StreamActions: {e}")
 
             return services_pb2.Empty()
