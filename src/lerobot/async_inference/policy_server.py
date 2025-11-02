@@ -355,6 +355,8 @@ class PolicyServer(services_pb2_grpc.AsyncInferenceServicer):
         self.last_processed_obs: TimedObservation = observation_t
         preprocessing_time = time.perf_counter() - start_preprocess
 
+        self.logger.info(f"Observation: {observation}\n\n")
+
         """3. Get action chunk"""
         start_inference = time.perf_counter()
         action_tensor = self._get_action_chunk(observation)
@@ -362,6 +364,8 @@ class PolicyServer(services_pb2_grpc.AsyncInferenceServicer):
         self.logger.info(
             f"Preprocessing and inference took {inference_time:.4f}s, action shape: {action_tensor.shape}"
         )
+
+        self.logger.info(f"Action tensor: {action_tensor}\n\n")
 
         """4. Apply postprocessor"""
         # Apply postprocessor (handles unnormalization and device movement)
@@ -377,6 +381,8 @@ class PolicyServer(services_pb2_grpc.AsyncInferenceServicer):
             single_action = action_tensor[:, i, :]
             processed_action = self.postprocessor(single_action)
             processed_actions.append(processed_action)
+
+        self.logger.info(f"Processed actions: {processed_actions}\n\n")
 
         # Stack back to (B, chunk_size, action_dim), then remove batch dim
         action_tensor = torch.stack(processed_actions, dim=1).squeeze(0)
